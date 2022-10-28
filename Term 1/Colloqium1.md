@@ -427,16 +427,26 @@ void CountingSort(vector<int>& a) {
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-void radixSortLSD(vector<string> &a, int m){
-    for (int i = m - 1; i >= 0; i--) {
-        vector<string> temp_arr;
-        for (int digit = 0; digit <= 26; digit++)
-            for (string& item : a){
-              if (item[digit] == char(digit + 'a')) {
-                temp_arr.push_back(item);
-              }
-            }
-        a = temp_arr;
+void radixSortInt(vector<int> &a, int m)с{
+    for (int dig = 0; dig < m; ++dig) {
+        int k = 10;
+        vector<int> cnt(k, 0);
+        for (auto el: a) {
+            cnt[get_digit(el,dig)]++;
+        }
+        int count = 0;
+        for (int number = 0; number < k; ++number) {
+            int tmp = cnt[number];
+            cnt[number] = count;
+            count += tmp;
+        }
+        vector<int> carry(a.size(),0);
+
+        for (int i = 0; i < a.size(); ++i) {
+            int d = get_digit(a[i], dig);
+            carry[cnt[d]++] = a[i];
+        }
+        a = carry;
     }
 }  
 ```
