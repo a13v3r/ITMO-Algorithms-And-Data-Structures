@@ -487,70 +487,18 @@ void pop(){
     delete to_del;
 }
 ```
-
-<br><h2>Обращение к первому элементу</h2><br>
-
-```c++
-T back(){
-    T ans = top->value;
-    return ans;
-}
-```
-
-<br><h2>Проверка на наличе элементов</h2><br>
-
-```c++
-bool empty(){
-    return (top == nullptr);
-}
-```
-
-<br><h2> Полная реализация структуры </h2><br>
-
-```c++
-template<class T>
-struct Node {
-    T value;
-    Node *prev = nullptr;
-};
-
-template<class T>
-struct Stack{
-    Node<T>* top;
-    Stack(){
-        top = nullptr;
-    }
-    void push(T val){
-        Node<T>* elem = new Node<T>;
-        elem->value = val;
-        if (top != nullptr){
-            elem->prev = top;
-            top = elem;
-        } else {
-            top = elem;
-        }
-    }
-
-    void pop(){
-        Node<T>* to_del = top;
-        top = top->prev;
-        delete to_del;
-    }
-
-    T back(){
-        T ans = top->value;
-        return ans;
-    }
-
-    bool empty(){
-        return (top == nullptr);
-    }
-};
-```
-
-
+  
 </details>
-<details><summary>9. Очередь </summary>
+<details><summary>9. Очередь</summary>
+
+| Удаление | Добавление | Поиск |
+|:--------:|:----------:|:-----:|
+|   O(1)   |    O(1)    |  O(n) |
+<h3>
+<br> <center> Описание структуры </center> <br>
+
+<h3>
+
 
   <br><center><h1> Реализация </h1></center><br>
 
