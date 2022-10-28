@@ -729,10 +729,131 @@ struct Queue{
 <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-template<class T>
+template <class T>
+
 struct Node {
-    T value; // значение
-    Node *prev = nullptr; // указатель на следующий элемент
+	T value;
+	Node* next = nullptr;
+};
+
+template <class T>
+struct LinkedList {
+	Node<T>* first;
+	Node<T>* last;
+	LinkedList() {
+		first = nullptr;
+		last = nullptr;
+	}
+	void Push(T val) {
+		Node<T>* new_node = new Node<T>;
+		new_node->value = val;
+		if (last == nullptr) {
+			last = new_node;
+			first = new_node;
+			return;
+		}
+		last->next = new_node;
+		last = new_node;
+	}
+	void PopFirst() { // deleting first
+		if (first->next == nullptr) {
+			last = nullptr;
+			first = nullptr;
+			return;
+		}
+		first = first->next;
+	}
+	void PopLast() { // deleting last
+		if (first->next == nullptr) {
+			last = nullptr;
+			first = nullptr;
+			return;
+		}
+		Node<T>* point = first;
+		while (point->next != last) {
+			point = point->next;
+		}
+		last = point;
+		last->next = nullptr;
+	}
+	void Insert(T val, uint64_t pos) { // pos = number of postinions after first
+		if (last == nullptr) {
+			Push(val);
+			return;
+		}
+		Node<T>* new_node = new Node<T>;
+		new_node->value = val;
+		if (pos == 0) {
+			new_node->next = first;
+			first = new_node;
+			return;
+
+		}
+		Node<T>* point = first;
+		while (pos > 1) {
+			pos--;
+			point = point->next;
+		}
+
+		if (point == last) {
+			Push(val);
+			return;
+		}
+
+		new_node->next = point->next;
+		point->next = new_node;
+	}
+	void Delete(uint64_t pos) { // pos = number of postinions after first
+		if (pos == 0) {
+			PopFirst();
+			return;
+		}
+		Node<T>* point = first;
+		while (pos > 1) {
+			pos--;
+			point = point->next;
+		}
+		if (point->next == last) {
+			PopLast();
+			return;
+		}
+		point->next = point->next->next;
+	}
+	T Front() {
+		return first->value;
+	}
+	T Back() {
+		return last->value;
+	}
+	T Get(uint64_t pos) {
+		if (pos == 0) {
+			return Front();
+		}
+		Node<T>* point = first;
+		while (pos) {
+			pos--;
+			point = point->next;
+		}
+		return point->value;
+	}
+	T GetMax() {
+		T maxel = first->value;
+		Node<T>* point = first->next;
+		while (point != first) {
+			maxel = max(maxel, point->value);
+			point = point->next;
+		}
+		return maxel;
+	}
+	T GetMin() {
+		T minel = first->value;
+		Node<T>* point = first->next;
+		while (point != first) {
+			minel = min(minel, point->value);
+			point = point->next;
+		}
+		return minel;
+	}
 };
 ```
 </details>
@@ -780,15 +901,271 @@ struct Node {
 <br><center><h1> Реализация </h1></center><br>
 
 ```c++
+template <class T>
+struct Node {
+	T value;
+	Node* next = nullptr;
+	Node* prev = nullptr;
+};
+
+template <class T>
+struct LinkedList {
+	Node<T>* first;
+	Node<T>* last;
+	LinkedList() {
+		first = nullptr;
+		last = nullptr;
+	}
+	void Push(T val) {
+		Node<T>* new_node = new Node<T>;
+		new_node->value = val;
+		if (last == nullptr) {
+			last = new_node;
+			first = new_node;
+			return;
+		}
+		new_node->prev = last;
+		last->next = new_node;
+		last = new_node;
+	}
+	void PopFirst() { // deleting first
+		if (first->next == nullptr) {
+			last = nullptr;
+			first = nullptr;
+			return;
+		}
+		first = first->next;
+		first->prev = nullptr;
+	}
+	void PopLast() { // deleting last
+		if (last->prev == nullptr) {
+			last = nullptr;
+			first = nullptr;
+			return;
+		}
+		last = last->prev;
+		last->next = nullptr;
+	}
+	void Insert(T val, uint64_t pos) { // pos = number of postinions after first
+		if (last == nullptr) {
+			Push(val);
+			return;
+		}
+		Node<T>* new_node = new Node<T>;
+		new_node->value = val;
+		if (pos == 0) {
+			new_node->next = first;
+			first->prev = new_node;
+			first = new_node;
+			return;
+
+		}
+		Node<T>* point = first;
+		while (pos > 1) {
+			pos--;
+			point = point->next;
+		}
+
+		if (point == last) {
+			Push(val);
+			return;
+		}
+
+		new_node->next = point->next;
+		new_node->prev = point;
+		point->next->prev = new_node;
+		point->next = new_node;
+	}
+	void Delete(uint64_t pos) { // pos = number of postinions after first
+		if (pos == 0) {
+			PopFirst();
+			return;
+		}
+		Node<T>* point = first;
+		while (pos > 1) {
+			pos--;
+			point = point->next;
+		}
+		if (point->next == last) {
+			PopLast();
+			return;
+		}
+		point->next->next->prev = point;
+		point->next = point->next->next;
+	}
+	T Front() {
+		return first->value;
+	}
+	T Back() {
+		return last->value;
+	}
+	T Get(uint64_t pos) {
+		if (pos == 0) {
+			return Front();
+		}
+		Node<T>* point = first;
+		while (pos) {
+			pos--;
+			point = point->next;
+		}
+		return point->value;
+	}
+	T GetMax() {
+		T maxel = first->value;
+		Node<T>* point = first->next;
+		while (point != first) {
+			maxel = max(maxel, point->value);
+			point = point->next;
+		}
+		return maxel;
+	}
+	T GetMin() {
+		T minel = first->value;
+		Node<T>* point = first->next;
+		while (point != first) {
+			minel = min(minel, point->value);
+			point = point->next;
+		}
+		return minel;
+	}
+};
 ```
 
 </details>
 <details><summary>12. Циклический список</summary>
 
-  <br><center><h1> Реализация </h1></center><br>
+<br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+  template <class T>
+struct Node {
+	T value;
+	Node* next;
+};
+
+template <class T>
+struct CycleLinkedList {
+	Node<T>* first;
+	Node<T>* last;
+	CycleLinkedList() {
+		first = nullptr;
+		last = nullptr;
+	}
+	void Push(T val) {
+		Node<T>* new_node = new Node<T>;
+		new_node->value = val;
+		if (last == nullptr) {
+			last = new_node;
+			first = new_node;
+			last->next = new_node;
+			first->next = new_node;
+			return;
+		}
+		new_node->next = first;
+		last->next = new_node;
+		last = new_node;
+	}
+	void PopFirst() { // deleting first
+		if (first->next == first) {
+			first = nullptr;
+			last = nullptr;
+			return;
+		}
+		last->next = first->next;
+		first = first->next;
+	}
+	void PopLast() { // deleting last
+		if (first->next == first) {
+			first = nullptr;
+			last = nullptr;
+			return;
+		}
+		Node<T>* point = first;
+		while (point->next != last) {
+			point = point->next;
+		}
+		point->next = first;
+		last = point;
+	}
+	void Insert(T val, uint64_t pos) { // pos = number of postinions after first
+		if (first == nullptr || first->next == first || pos == 0) {
+			Push(val);
+			return;
+		}
+
+		Node<T>* point = first;
+		while (pos > 1) {
+			pos--;
+			point = point->next;
+		}
+
+		if (point == last) {
+			Push(val);
+			return;
+		}
+
+		Node<T>* new_node = new Node<T>;
+		new_node->value = val;
+		new_node->next = point->next;
+		point->next = new_node;
+	}
+	void Delete(uint64_t pos) { // pos = number of postinions after first
+		if (pos == 0) {
+			PopFirst();
+			return;
+		}
+		Node<T>* point = first;
+		while (pos > 1) {
+			pos--;
+			point = point->next;
+		}
+		if (point->next == first) {
+			PopFirst();
+			return;
+		}
+		else if (point->next == last) {
+			PopLast();
+			return;
+		}
+
+		point->next = point->next->next;
+	}
+	T Front() {
+		return first->value;
+	}
+	T Back() {
+		return last->value;
+	}
+	T Get(uint64_t pos) {
+		if (pos == 0) {
+			return Front();
+		}
+		Node<T>* point = first;
+		while (pos) {
+			pos--;
+			point = point->next;
+		}
+		return point->value;
+	}
+	T GetMax() {
+		T maxel = first->value;
+		Node<T>* point = first->next;
+		while (point != first) {
+			maxel = max(maxel, point->value);
+			point = point->next;
+		}
+		return maxel;
+	}
+	T GetMin() {
+		T minel = first->value;
+		Node<T>* point = first->next;
+		while (point != first) {
+			minel = min(minel, point->value);
+			point = point->next;
+		}
+		return minel;
+	}
+};
 ```
 
 </details>
