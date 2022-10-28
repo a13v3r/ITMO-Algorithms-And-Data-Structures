@@ -75,9 +75,9 @@
 
   <br><h2> Устойчивость </h2><br>
 
-  <p><h3>*Сортировка вставками* является устойчивой.<h3></p>
+  <p><h3><strong>Сортировка вставками</strong> является устойчивой.</h3></p>
 
-<h3>
+</h3>
 
 
   Лучший случай достигается, при изначально отсортрованном массиве.
@@ -301,7 +301,7 @@ void QuickSort(vector<T>& a, int l, int r, Compare& cmp) {
 
 Данная реализация сортировки подсчетом не является устойчивой, так как идет перезапись каждого элемента.
 
-<h3>
+</h3>
 
 <img src = "source/CountingSort1.gif">
 
@@ -433,24 +433,26 @@ void radixSortLSD(vector<string> &a, int m){
 |   O(1)   |    O(1)    |  O(n) |
 
 
-  <br> <center> Описание структуры </center> <br>
+  <h2><center> Описание структуры </center><h2>
+  <h3>
   <p>Stack - абстрактный тип данных, представляющий собой список элементов, организованных по принципу LIFO (англ. last in — first out, «последним пришёл — первым вышел»). </p>
 
   <p>Если проще, то Stack можно представить в виде стопки книг (для того, чтобы добраться до определенной книги необходимо убрать сверху все остальные). </p> 
 
   <p>Стек состоит из ячеек(в примере — это книги), которые представлены в виде структуры, содержащей какие-либо данные и указатель типа данной структуры на следующий элемент.</p>
-
+  </h3>
   <h3><br>   
   <img src = "source/Stack.gif">
 
-  <br><center><h1> Реализация </h1></center><br>
-  <h3> Stack поддерживает следующие функции: <br>
+   <h2>Stack поддерживает следующие операции: </h2>
+<h3>
 
 * Добавление элемента в начало
 * удаление первого элемента
 * Проверка на наличие элементов
 * Обращение к первому элементу
 </h3>
+
 <br><h2>Добавление в начало</h2><br>
 <h3>
 <p>Для добаления нового элемента в Stack мы создаем ячейку с необходимым нам значением.
@@ -487,23 +489,195 @@ void pop(){
     delete to_del;
 }
 ```
+
+<br><h2> Проверка на наличие элементов </h2><br>
+
+```c++
+bool empty(){
+    return (top == nullptr);
+}
+```
+
+<br><h2> Обращение к первому элементу </h2><br>
+
+```c++
+T back(){
+    T ans = top->value;
+    return ans;
+}
+```
+<br><h2> Полная реализация </h2><br>
+
+```c++
+template<class T>
+struct Stack{
+    Node<T>* top;
+    Stack(){
+        top = nullptr;
+    }
+    void push(T val){
+        Node<T>* elem = new Node<T>;
+        elem->value = val;
+        if (top != nullptr){
+            elem->prev = top;
+            top = elem;
+        } else {
+            top = elem;
+        }
+    }
+
+    void pop(){
+        Node<T>* to_del = top;
+        top = top->prev;
+        delete to_del;
+    }
+
+    T back(){
+        T ans = top->value;
+        return ans;
+    }
+
+    bool empty(){
+        return (top == nullptr);
+    }
+};
+```
+
   
 </details>
 <details><summary>9. Очередь </summary>
+<h2><center>Очередь</center></h2><br>
+
+<h3>
 
 | Удаление | Добавление | Поиск |
 |:--------:|:----------:|:-----:|
 |   O(1)   |    O(1)    |  O(n) |
-<h3>
-<br> <center> Описание структуры </center> <br>
+
+</h3>
+
+<h2> Описание структуры <br></h2>
 
 <h3>
 
+<p>Queue — абстрактный тип данных, представляющий собой список элементов, организованных по принципу FIFO (англ. first in — first out, «первым пришёл — первым вышел»).</p>
 
-  <br><center><h1> Реализация </h1></center><br>
+* head - голова очереди (отсюда удаляются элементы).
+* tail - хвост очереди (сюда добавляются элементы).
+
+<br> Очередь поодерживает следующие операции: <br>
+
+* push - операция вставки элемента (в конец).
+* pop - операция удаление элемета (из начала). 
+* size - операция получения количества элементов в очереди.
+* empty - проверка очереди на наличие в ней элементов.
+* top - возвращает элемент из начала.
+</h3>
+
+<img src = "source/Queue.png">
+
+<br><h2>Добавление элемента в конец</h2><br>
+<h3><p>Добавление элемента в конец осущетсвляется по следующему принципу:
+</p>
+
+1. Создается новая ячейка, указывающая на nullptr и имеющая необходимое нам значение. 
+2. Проверяется: есть ли элементы в очереди.
+3. *(1)* <strong> Если элементов нет</strong>, то первый и последний элементы становяться равны новой ячейки. 
+3. *(2)* <strong> Если элементы есть</strong>, то мы делаем так, чтобы последний элемент стал указывать на новый, и чтобы последний tail был равен новому элементу. 
+</h3>
 
 ```c++
-  
+void push(T val){
+    Node<T>* elem = new Node<T>;
+    if (last != nullptr){
+        last->next = elem;
+    } else {
+        first = elem;
+    }
+    elem->value  = val;
+    elem->next = nullptr;
+    last = elem;
+}
+```
+
+<br><h2>Удаление элемента</h2><br>
+<h3><p> Удаление элемента осуществляется по следующему принципу:</p>
+
+1. Создается ячейка для удаления, равная tail.
+2. head становиться вторая ячейка.
+3. Если после удаления очередь стала пустой, то присваиваем tail nullptr.
+4. Чистим память, на которую указывает ячейка.
+5. Удаляем ячейку.
+
+</h3>
+
+
+
+```c++
+void pop(){
+    Node<T>* to_del = first;
+    first = first->next;
+    if (first == nullptr)
+    {
+        last = nullptr;
+    }
+    delete to_del;
+}
+```
+
+<br><h2>Вывод первого элемента</h2><br>
+
+```c++
+T front(){
+    T ans = first->value;
+    return ans;
+}
+```
+
+<br><h2>Полная реализация</h2><br>
+
+```c++
+template<class T>
+struct Node {
+    T value;
+    Node *next;
+};
+
+template<class T>
+struct Queue{
+    Node<T>* first;
+    Node<T>* last;
+    Queue(){
+        first = nullptr;
+        last = nullptr;
+    }
+    void push(T val){
+        Node<T>* elem = new Node<T>;
+        if (last != nullptr){
+            last->next = elem;
+        } else {
+            first = elem;
+        }
+        elem->value  = val;
+        elem->next = nullptr;
+        last = elem;
+    }
+
+    void pop(){
+        Node<T>* to_del = first;
+        first = first->next;
+        if (first == nullptr)
+        {
+            last = nullptr;
+        }
+        delete to_del;
+    }
+
+    T front(){
+        T ans = first->value;
+        return ans;
+    }
+};  
 ```
 </details>
 <details><summary>10. Односвязный список</summary>
