@@ -308,8 +308,8 @@ void QuickSort(vector<T>& a, int l, int r, Compare& cmp) {
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-void CountingSort(vector<int>& a) {
-    int maxn;
+void SimpleCountingSort(vector<int>& a) {
+    int maxn = 0;
     for (int i = 0; i < a.size(); ++i) {
         maxn = max(maxn, a[i]);
     }
@@ -320,12 +320,12 @@ void CountingSort(vector<int>& a) {
     }
     a.clear();
     a.resize(0);
-    for (int i = 0; i < maxn; ++i) {
-        for (int j = 0; j < cnt[i]; ++j) {
-            a.push_back(i);
+    for (int number = 0; number < maxn; ++number) {
+        for (int j = 0; j < cnt[number]; ++j) {
+            a.push_back(number);
         }
     }
-}  
+}
 ```
 
   <center><h1> Сортировка подсчетом (вторая вариация) </h1></center>
@@ -371,7 +371,26 @@ void CountingSort(vector<int>& a) {
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+void CountingSort(vector<int>& a) {
+    int maxn = 0;
+    for (int i = 0; i < a.size(); ++i) {
+        maxn = max(maxn, a[i]);
+    }
+    maxn++;
+    vector<int> cnt(maxn, 0);
+    for (auto el: a) {
+        cnt[el]++;
+    }
+    for (int number = 1; number < maxn; ++number) {
+        cnt[number] += cnt[number-1];
+    }
+    vector<int> carry(a.size(),0);
+
+    for (int i = a.size() - 1; i >= 0; --i) {
+        carry[--cnt[a[i]]] = a[i];
+    }
+    a = carry;
+}  
 ```
 
 
