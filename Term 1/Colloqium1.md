@@ -698,11 +698,25 @@ struct Queue{
     }
 };  
 ```
+
 </details>
 <details><summary>10. Односвязный список</summary>
-  <center><h1> Односвязный список </h1></center>
-  <img src = "source/List1.png">
-  <br><center><h1> Реализация </h1></center><br>
+<center><h1> Односвязный список </h1></center>
+<img src = "source/List1.png">
+<br><h2>Добавление элемента в начало</h2><br>
+<img src = "source/addNewEl.png">   
+<h2> Пояснение: </h2>
+<h3><p> Для того, чтобы добавить новую Node в начало мы переприсваиваем указатель head на новую Node и делаем новый элемент head.</p></h3>
+<br><h2> Добавление элемента в середину </h2><br>
+<img src = "source/addNewNode.png">
+<h2> Пояснение: </h2>
+<h3><p> Для того, чтобы добавить новую Node в середину необходимо: переопределить указатель новой Node на следующий элемент, а указатель предыдущего элемента - на новую. </p></h3>
+<br><h2> Удаление Node </h2><br>
+<img src = "source/delNode.png">
+<h2> Пояснение: </h2>
+<h3><p> Мы переназначиваем указатель предыдущего Node на следующую после того Node, которую хотим удалить. Зануляем указатель <strong>и не забываем почистить за собой память(т.е. сделать delete) </strong></p></h3>
+
+<br><center><h1> Реализация </h1></center><br>
 
 ```c++
 template<class T>
@@ -711,14 +725,51 @@ struct Node {
     Node *prev = nullptr; // указатель на следующий элемент
 };
 ```
-
 </details>
-<details><summary>11. Двусвязный список</summary>
 
-  <br><center><h1> Реализация </h1></center><br>
+<details><summary>11. Двусвязный список</summary>
+<center><h1> Двусвязный список </h1></center>
+<img src = "source/List2.png">
+<br><h2>Добавление элемента в начало</h2><br>
+<img src = "source/addNewNode2Head.png">
+<h2>Пояснение:<h2>
+<h3>
+
+1. Создаем новую Node.
+2. Ставим указатель prev новой Node на head.
+3. Ставим указатель next head на Node.
+4. переопрделяем head на новую Node.
+</h3>
+
+
+<br><h2>Добавление элемента в определенное место</h2><br>
+<img src = "source/addNewNode2_.png">
+<h2>Пояснение:<h2>
+<h3>
+
+1. Создаем новую Node.
+2. Ставим указатель next новой Node на нужное нам место.
+3. Ставим указатель prev новой Node на Node.next.prev.
+4. Переопределяем prev указатель Node.next на Node.
+5. Переопределяем next указатель Node.prev на Node. 
+</h3>
+
+<br><h3><p>Удаление Node</p></h3><br>
+<img src = "source/delNode2.png">
+<h2>Пояснение:</h2>
+<h3>
+
+1. Переопределяем указатель Node.prev.next на Node.next.
+2. Переопределяем указатель Node.next.prev на Node.prev.
+3. Убераем указатели.
+4. Удаляем Node.
+
+</h3>
+
+
+<br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
 ```
 
 </details>
