@@ -6,12 +6,13 @@
 using namespace std;
 
 void radixSortLSD(vector<string> &a, int m){
-    for (int i = m - 1; i >= 0; i--) {
+    for (int digit = m - 1; digit >= 0; digit--) {
         vector<string> temp_arr;
-        for (int digit = 0; digit <= 26; digit++)
-            for (string& item : a){
-                if (item[digit] == char(digit + 'a')) temp_arr.push_back(item);
+        for (int letter = 0; letter <= 26; letter++) { //26 = 'z' - 'a' + 1
+            for (string& item: a) {
+                if (item[digit] == char(letter + 'a')) temp_arr.push_back(item);
             }
+        }
         a = temp_arr;
     }
 }
