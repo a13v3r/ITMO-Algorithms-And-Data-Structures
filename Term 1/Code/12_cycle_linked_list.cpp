@@ -3,7 +3,6 @@
 using namespace std;
 
 template <class T>
-
 struct Node {
 	T value;
 	Node* next;
@@ -136,18 +135,18 @@ struct CycleLinkedList {
 template <class T>
 void CommandHandler() {
 	cout << "Congratulations! You are using Cycle linked list!\n" <<
-			"Using type is int.You can change it. \n" <<
-			"Insert number of options, then:\n" <<
-			"P value- push(value) moves last\n" <<
-			"PF - pop first()\n" <<
-			"PL - pop last()\n" <<
-			"I value position- insert(value, position) position(>=0) - number of positions after first. If 0,than moves the first\n" <<
-			"D position- delete(position) position(>=0) - number of positions after first. If 0,than deletes the first\n" <<
-			"F - get front()\n" <<
-			"B - get back()\n" <<
-			"G position- get(position) position(>=0) - number of positions after first. If 0,than prints the first\n" <<
-			"GMA - get max()\n" <<
-			"GMI - get min()" << endl;
+		"Using type is int.You can change it. \n" <<
+		"Insert number of options, then:\n" <<
+		"P value- push(value) moves last\n" <<
+		"PF - pop first()\n" <<
+		"PL - pop last()\n" <<
+		"I value position- insert(value, position) position(>=0) - number of positions after first. If 0,than moves the first\n" <<
+		"D position- delete(position) position(>=0) - number of positions after first. If 0,than deletes the first\n" <<
+		"F - get front()\n" <<
+		"B - get back()\n" <<
+		"G position- get(position) position(>=0) - number of positions after first. If 0,than prints the first\n" <<
+		"GMA - get max()\n" <<
+		"GMI - get min()" << endl;
 	cout << endl << "If 'position' bigger than number of element than position = position % num_of_elem" << endl << endl;
 	CycleLinkedList<T> linked_list;
 	int n;
