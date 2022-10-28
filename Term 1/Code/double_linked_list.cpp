@@ -3,7 +3,6 @@
 using namespace std;
 
 template <class T>
-
 struct Node {
 	T value;
 	Node* next = nullptr;
