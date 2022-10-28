@@ -489,7 +489,7 @@ void pop(){
 ```
   
 </details>
-<details><summary>9. Очередь</summary>
+<details><summary>9. Очередь </summary>
 
 | Удаление | Добавление | Поиск |
 |:--------:|:----------:|:-----:|
