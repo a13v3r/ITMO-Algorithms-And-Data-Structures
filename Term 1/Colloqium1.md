@@ -73,6 +73,13 @@
 | По времени | O(n)          | O(n^2)         | O(n^2)        |
 | По памяти  | O(1)          | O(1)           | O(1)          |
 
+  <br><h2> Устойчивость </h2><br>
+
+  <p><h3>*Сортировка вставками* является устойчивой.<h3></p>
+
+<h3>
+
+
   Лучший случай достигается, при изначально отсортрованном массиве.
   
   Инвариант: на j-й итерации цикла массив [0..(j-1)] состоит из исходных элементов, расположенных в порядке возрастания.
@@ -85,7 +92,21 @@
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+bool CmpToIntLower(int &a, int &b) {
+  return a < b;
+}
+
+
+template<class T, class Compare>
+void InsertionSort(vector<T> &a, Compare cmp = CmpToIntLower) {
+    for (int i = 1; i < a.size(); ++i) {
+        int j = i-1;
+        while  (j >= 0 && CmpToIntLower(a[j + 1], a[j])){
+            swap(a[j+1],a[j]);
+            j--;
+        }
+    }
+}
 ```
 
 </details>
@@ -99,16 +120,86 @@
 |:----------:|:-------------:|:--------------:|:-------------:|
 | По времени | O(n * log(n)) | O(n * log(n))  | O(n * log(n)) |
 | По памяти  | O(n)          | O(n)           | O(n)          |
+
+  <p><h3>*Сортировка слиянием* является устойчивой.<h3></p>
+
   <br>По времени: n тратится на слияние log(n) на зазбиению через вызов рекурсии. 
 
   !Необходим дополнительный массив при слиянии.
   <h3>    
   <img src = "source/MergeSort.png">
   <br><center><h1> Реализация </h1></center><br>
+  <h2> Рекурсивное разбиение исходного массива </h2>
 
 ```c++
-  
+template<class T, class Compare>
+void MergeSortRecursive(vector<T>& a, int left, int right, Compare& cmp = CmpToIntLower) {
+    if (right - left <= 1) {
+        return;
+    }
+    if (right - left == 2) {
+        if (cmp(a[left], a[left + 1])) swap(a[left], a[left + 1]);
+    }
+    int mid = left + (right - left) / 2;
+    MergeSortRecursive(a, left, mid, cmp);
+    MergeSortRecursive(a, mid, right, cmp);
+    //merge(a.begin()+left,a.begin()+mid,a.begin()+mid,a.begin()+right, back_inserter(tmp));
+    vector<T> tmp = my_merge(a, left, mid, mid, right, cmp);
+    copy(tmp.begin(), tmp.end(), a.begin() + left);
+} 
 ```
+
+<br><h2>Нерекурсивное разбиение исходного массива</h2>
+
+```c++
+template<class T, class Compare>
+void MergeSortNotRecursive(vector<T>& a, Compare cmp = CmpToIntLower) {
+    int step = 1;
+    while (step < a.size()) {
+        int i = 0;
+        vector<T> b;
+        while (i * 2 * step <= a.size()) {
+            int l1 = i * 2 * step, r1 = l1 + step, l2 = l1 + step, r2 = min(l2 + step, (int) a.size());
+            if (l2 < a.size()) {
+                //merge(a.begin()+l1,a.begin()+r1,a.begin()+l2,a.begin()+r2, back_inserter(b));
+                vector<T> tmp = my_merge(a, l1, r1, l2, r2, cmp);
+                copy(tmp.begin(), tmp.end(), back_inserter(b));
+            } else {
+                r1 = min(l1 + step, (int) a.size());
+                copy(a.begin() + l1, a.begin() + r1, back_inserter(b));
+            }
+            i++;
+        }
+        a = b;
+        step += step;
+    }
+}
+```
+<br><h2> Слияние разбитых массивов </h2>
+
+```c++
+bool CmpToIntLower(int& a, int& b) {
+    return a < b;
+}
+
+
+template<class T, class Compare>
+vector<T> my_merge(vector<T>& a, int l1, int r1, int l2, int r2, Compare cmp) {
+    vector<T> temp;
+    while (l1 < r1 && l2 < r2) {
+        if (cmp(a[l1], a[l2])) {
+            temp.push_back(a[l1++]);
+        } else {
+            temp.push_back(a[l2++]);
+        }
+    }
+    while (l1 < r1) temp.push_back(a[l1++]);
+    while (l2 < r2) temp.push_back(a[l2++]);
+    return temp;
+}
+```
+
+
 </details>
 <details><summary>5. Быстрая сортировка</summary>
 
@@ -353,15 +444,113 @@ void radixSortLSD(vector<string> &a, int m){
   <img src = "source/Stack.gif">
 
   <br><center><h1> Реализация </h1></center><br>
+  <h3> Stack поддерживает следующие функции: <br>
+
+* Добавление элемента в начало
+* удаление первого элемента
+* Проверка на наличие элементов
+* Обращение к первому элементу
+</h3>
+<br><h2>Добавление в начало</h2><br>
+<h3>
+<p>Для добаления нового элемента в Stack мы создаем ячейку с необходимым нам значением.
+<strong>
+
+* Если Stack оказывается пустым, то мы делаем ячейку головой.
+* Если в Stack хранится какой-либо элемент, то мы ставим указатель нового элемента на голову и только потом делаем данную ячейку головой.  
+</strong>
+</h3>
 
 ```c++
-  
+void push(T val){
+    Node<T>* elem = new Node<T>;
+    elem->value = val;
+    if (top != nullptr){
+        elem->prev = top;
+        top = elem;
+    } else {
+        top = elem;
+    }
+}
 ```
-  
+
+<br><h2>Удаление элемента</h2><br>
+
+<h3>
+<p>Для удаления элемента в Stack мы сохраняем адресс головы, переназначаем первый элемент (делаем второй первым), <strong>чистим за собой память</strong> и только потом удаляем элемент.
+</h3>
+
+```c++
+void pop(){
+    Node<T>* to_del = top;
+    top = top->prev;
+    delete to_del;
+}
+```
+
+<br><h2>Обращение к первому элементу</h2><br>
+
+```c++
+T back(){
+    T ans = top->value;
+    return ans;
+}
+```
+
+<br><h2>Проверка на наличе элементов</h2><br>
+
+```c++
+bool empty(){
+    return (top == nullptr);
+}
+```
+
+<br><h2> Полная реализация структуры </h2><br>
+
+```c++
+template<class T>
+struct Node {
+    T value;
+    Node *prev = nullptr;
+};
+
+template<class T>
+struct Stack{
+    Node<T>* top;
+    Stack(){
+        top = nullptr;
+    }
+    void push(T val){
+        Node<T>* elem = new Node<T>;
+        elem->value = val;
+        if (top != nullptr){
+            elem->prev = top;
+            top = elem;
+        } else {
+            top = elem;
+        }
+    }
+
+    void pop(){
+        Node<T>* to_del = top;
+        top = top->prev;
+        delete to_del;
+    }
+
+    T back(){
+        T ans = top->value;
+        return ans;
+    }
+
+    bool empty(){
+        return (top == nullptr);
+    }
+};
+```
+
+
 </details>
-<details><summary>9. Очередь</summary>
-
-
+<details><summary>9. Очередь </summary>
 
   <br><center><h1> Реализация </h1></center><br>
 
@@ -370,11 +559,16 @@ void radixSortLSD(vector<string> &a, int m){
 ```
 </details>
 <details><summary>10. Односвязный список</summary>
-
+  <center><h1> Односвязный список </h1></center>
+  <img src = "source/List1.png">
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+template<class T>
+struct Node {
+    T value; // значение
+    Node *prev = nullptr; // указатель на следующий элемент
+};
 ```
 
 </details>
