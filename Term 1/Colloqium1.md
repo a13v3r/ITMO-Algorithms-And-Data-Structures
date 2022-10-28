@@ -168,7 +168,23 @@
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+void QuickSort(vector<T>& a, int l, int r, Compare& cmp) {
+  int i, j;
+  auto k = a[l + (r - l) / 2];
+  i = l;
+  j = r;
+  do {
+      while (cmp(a[i], k)) i++;
+      while (cmp(k, a[j])) j--;
+      if (i <= j) {
+          swap(a[i], a[j]);
+          i++;
+          j--;
+      }
+  } while (i < j);
+  if (l < j) QuickSort(a, l, j, cmp);
+  if (i < r) QuickSort(a, i, r, cmp);
+}
 ```
 
 </details>
@@ -201,7 +217,24 @@
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+void CountingSort(vector<int>& a) {
+    int maxn;
+    for (int i = 0; i < a.size(); ++i) {
+        maxn = max(maxn, a[i]);
+    }
+    maxn++;
+    vector<int> cnt(maxn, 0);
+    for (auto el: a) {
+        cnt[el]++;
+    }
+    a.clear();
+    a.resize(0);
+    for (int i = 0; i < maxn; ++i) {
+        for (int j = 0; j < cnt[i]; ++j) {
+            a.push_back(i);
+        }
+    }
+}  
 ```
 
   <center><h1> Сортировка подсчетом (вторая вариация) </h1></center>
