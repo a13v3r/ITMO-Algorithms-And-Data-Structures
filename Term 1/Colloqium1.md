@@ -216,67 +216,92 @@ vector<T> my_merge(vector<T>& a, int l1, int r1, int l2, int r2, Compare cmp) {
 *Худший случай* — когда на каждом разбиении массив делится на одноэлементный массив и массив длины **n - 1**.
 
 **log(n)** в оценке памяти — глубина рекурсии.
-<h3>
+</h3>
 
 <h2> Разбиение Ломуто </h2>
 
-</h3>
+<h3>
 
 *Опорный элемент* — последний элемент массива.
 
-<h3>
+</h3>
+
+<br><center><h1> Реализация </h1></center><br>
+
+```c++
+int partitionLomuto(vector<T> &a,int l, int r, Compare &cmp) {
+    T pivot = a[r];
+    int i = l - 1;
+    for (int j = l; j < r; ++j) {
+        if (cmp(a[j], pivot)){  //cmp: <= >=
+            i++;
+            swap(a[i],a[j]);
+        }
+    }
+    swap(a[i+1],a[r]);
+    return i + 1;
+}
+
+void QuickSortL(vector<T> &a,int l, int r, Compare &cmp){
+    if (l < r){
+        int p = partitionLomuto(a,l,r,cmp);
+        QuickSortL(a,l,p - 1,cmp);
+        QuickSortL(a,p + 1,r,cmp);
+    }
+}
+```
 
 <h2> Разбиение Хоара </h2>
 
-</h3>
+<h3>
 
 *Опорный элемент* — элемент посередине массива.
 
 *Разбиение Хоара* эффективнее Ломуто, так как происходит в среднем в **3** раза меньше свапов, и разбиение эффективнее, когда все элементы равны.
 
-<h3>
+</h3>
+
+  <br><center><h1> Реализация </h1></center><br>
+
+```c++
+void QuickSortH(vector<T> &a,int l, int r, Compare &cmp){
+    int i,j;
+    T k = a[l + (r-l)/2];
+    i = l;
+    j = r;
+    do {
+        while (cmp(a[i],k)) i++;  // cmp: > <
+        while (cmp(k,a[j])) j--;
+        if (i<=j){
+            swap(a[i],a[j]);
+            i++;
+            j--;
+        }
+    } while (i < j);
+    if (l < j) QuickSortH(a,l,j,cmp);
+    if (i < r) QuickSortH(a,i,r,cmp);
+}
+```
 
 <h2> Модификации </h2>
 
-</h3>
+<h3>
 
 1.  Выбор *опорного элемента* случайным образом.
 
 2.  Выбор *опорного элемента*, как среднее между крайным левым и крайним правым значением массива.
 
-<h3>
+</h3>
 
 <h2> Устойчивость </h2>
 
-</h3>
+<h3>
 
 *Быстрая сортировка* не является устойчивой сортировкой из-за свапов при разбиении на два массива.
 
-<h3>
+</h3>
 
 <img src = "source/QuickSort.png">
-
-  <br><center><h1> Реализация </h1></center><br>
-
-```c++
-void QuickSort(vector<T>& a, int l, int r, Compare& cmp) {
-  int i, j;
-  auto k = a[l + (r - l) / 2];
-  i = l;
-  j = r;
-  do {
-      while (cmp(a[i], k)) i++;
-      while (cmp(k, a[j])) j--;
-      if (i <= j) {
-          swap(a[i], a[j]);
-          i++;
-          j--;
-      }
-  } while (i < j);
-  if (l < j) QuickSort(a, l, j, cmp);
-  if (i < r) QuickSort(a, i, r, cmp);
-}
-```
 
 </details>
 <details><summary>6. Сортировка подсчетом</summary>
@@ -293,11 +318,11 @@ void QuickSort(vector<T>& a, int l, int r, Compare& cmp) {
 
 В данной реализации исходный массив **A[n]** состоит из целых чисел от **0** до **k - 1**. Массив **C[k]** для подсчета количества повторений каждого числа в массиве **A**. После этого в **A** последовательно каждый **i** записывается **C[i]** раз.
 
-<h3>
+</h3>
 
 <h2> Устойчивость </h2>
 
-</h3>
+<h3>
 
 Данная реализация сортировки подсчетом не является устойчивой, так как идет перезапись каждого элемента.
 
@@ -449,6 +474,30 @@ void radixSortInt(vector<int> &a, int m)с{
         a = carry;
     }
 }  
+```
+
+<h3>
+
+Релизация для строк. Сложность по памяти будет **O(n)**, сложность по времени не изменится.
+
+</h3>
+
+  <br><center><h1> Реализация </h1></center><br>
+
+```c++
+void radixSortStrings(vector<string> &a, int m){ //make sure size of all strings = m
+    for (int digit = m - 1; digit >= 0; digit--) {
+        vector<string> temp_arr;
+        for (int letter = 0; letter <= 26; letter++) { //26 = 'z' - 'a' + 1
+            for (string& item: a) {
+                if (item[digit] == char(letter + 'a')) temp_arr.push_back(item);
+            }
+        }
+        a = temp_arr;
+
+
+    }
+}
 ```
 
 </details>
@@ -1033,6 +1082,16 @@ struct LinkedList {
 
 </details>
 <details><summary>12. Циклический список</summary>
+
+<center><h1> Циклический список </h1></center>
+
+<h3>
+
+*Циклическиий список* - это односвязный список, первый элемент которого является следующим для последнего.
+
+</h3>
+
+<img src = "source/CycledList1.png">
 
 <br><center><h1> Реализация </h1></center><br>
 
