@@ -131,8 +131,9 @@ struct LinkedList {
 
 template <class T>
 void CommandHandler() {
+	LinkedList<T> linked_list;
 	cout << "Congratulations! You are using Cycle linked list!\n" <<
-			"Using type is int.You can change it. \n" <<
+			"The using type is " << typeid(T).name() << ".You can change it. \n" <<
 			"Insert number of options, then:\n" <<
 			"P value- push(value) moves last\n" <<
 			"PF - pop first()\n" <<
@@ -144,7 +145,6 @@ void CommandHandler() {
 			"G position- get(position) position(>=0) - number of positions after first. If 0,than prints the first\n" <<
 			"GMA - get max()\n" <<
 			"GMI - get min()" << endl << endl;
-	LinkedList<T> linked_list;
 	int n;
 	cin >> n;
 	for (int i = 0; i < n; i++) {

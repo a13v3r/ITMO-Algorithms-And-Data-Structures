@@ -134,7 +134,7 @@ struct LinkedList {
 template <class T>
 void CommandHandler() {
 	cout << "Congratulations! You are using Cycle linked list!\n" <<
-			"Using type is int.You can change it. \n" <<
+			"The using type is " << typeid(T).name() << ".You can change it. \n" <<
 			"Insert number of options, then:\n" <<
 			"P value- push(value) moves last\n" <<
 			"PF - pop first()\n" <<
