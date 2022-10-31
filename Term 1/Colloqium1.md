@@ -1245,7 +1245,38 @@ struct CycleLinkedList {
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+template<class T>
+struct Stack{
+    Node<T>* top;
+    Stack(){
+        top = nullptr;
+    }
+    void push(T val){
+        Node<T>* elem = new Node<T>;
+        elem->value = val;
+        if (top != nullptr){
+            elem->prev = top;
+            top = elem;
+        } else {
+            top = elem;
+        }
+    }
+
+    void pop(){
+        Node<T>* to_del = top;
+        top = top->prev;
+        delete to_del;
+    }
+
+    T back(){
+        T ans = top->value;
+        return ans;
+    }
+
+    bool empty(){
+        return (top == nullptr);
+    }
+};
 ```
 
 </details>
@@ -1254,6 +1285,46 @@ struct CycleLinkedList {
   <br><center><h1> Реализация </h1></center><br>
 
 ```c++
-  
+  template<class T>
+struct Node {
+    T value;
+    Node *next;
+};
+
+template<class T>
+struct Queue{
+    Node<T>* first;
+    Node<T>* last;
+    Queue(){
+        first = nullptr;
+        last = nullptr;
+    }
+    void push(T val){
+        Node<T>* elem = new Node<T>;
+        if (last != nullptr){
+            last->next = elem;
+        } else {
+            first = elem;
+        }
+        elem->value  = val;
+        elem->next = nullptr;
+        last = elem;
+    }
+
+    void pop(){
+        Node<T>* to_del = first;
+        first = first->next;
+        if (first == nullptr)
+        {
+            last = nullptr;
+        }
+        delete to_del;
+    }
+
+    T front(){
+        T ans = first->value;
+        return ans;
+    }
+};  
 ```
 </details>
