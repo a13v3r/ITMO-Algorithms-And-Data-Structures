@@ -250,6 +250,7 @@ void QuickSortL(vector<T> &a,int l, int r, Compare &cmp){
     }
 }
 ```
+<img src = "source/QuickSort.png">
 
 <h2> Разбиение Хоара </h2>
 
@@ -301,7 +302,7 @@ void QuickSortH(vector<T> &a,int l, int r, Compare &cmp){
 
 </h3>
 
-<img src = "source/QuickSort.png">
+
 
 </details>
 <details><summary>6. Сортировка подсчетом</summary>
